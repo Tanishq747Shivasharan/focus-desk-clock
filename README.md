@@ -110,13 +110,9 @@ features that are not available.
 
 ## Author and contributions
 
-Developed and managed by **Tanishq Shivasharan**.
-
 **More contributions to this project are welcome!** Bug reports, ideas, design tweaks, new
 features and documentation fixes all help, whether you are a beginner or an experienced developer.
 Open an issue or pull request at https://github.com/Tanishq747Shivasharan/focus-desk-clock. Please keep the project dependency-free, keep the black
 minimalist style, and test on a phone-sized landscape screen before submitting.
 
-## Licence
 
-No licence has been chosen yet. Add a `LICENSE` file before sharing the code publicly.
