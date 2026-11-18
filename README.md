@@ -28,7 +28,7 @@ completed sessions so the day has a visible rhythm.
 Ready-made desk timers exist, for example the
 [Portronics Glowtime](https://www.portronics.com/products/glowtime), but I didn't want to
 spend money on one. I had an old Android phone lying around, so I decided to build my own
-using the skills I have today.
+built with an AI coding mentor while learning web development..
 
 I started this project as a complete beginner. Setting up the terminal, understanding how a
 web app is put together and putting it online were all new to me, and Focus Desk Clock is the
