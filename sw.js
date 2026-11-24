@@ -1,6 +1,6 @@
 // Focus Desk Clock service worker
 // Strategy: try the network first (so edits show up), fall back to the saved copy when offline.
-const CACHE = "focus-desk-clock-v1";   // change v1 to v2 if you ever add new files to FILES
+const CACHE = "focus-desk-clock-v2";   
 const FILES = [
   "./", "index.html", "style.css", "app.js",
   "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png",

@@ -258,3 +258,27 @@ body[data-mode="stopwatch"] .display {
   color: #d8d8d8; border: 1px solid var(--border);
 }
 .tour-link:hover, .tour-link:active { color: #22d3ee; border-color: #22d3ee; }
+
+/* Rolling digits (pill seconds + big display) */
+#pillTime, #display { font-variant-numeric: tabular-nums; }
+
+.sec, #display { --h: 1.2em; }               /* height of one digit */
+
+.digit {
+  display: inline-block;
+  height: var(--h);
+  line-height: var(--h);
+  overflow: hidden;
+  vertical-align: bottom;
+}
+.roll {
+  display: flex;
+  flex-direction: column;
+  animation: rollUp 0.35s ease-out forwards;
+}
+.roll span { display: block; height: var(--h); line-height: var(--h); }
+
+@keyframes rollUp {
+  from { transform: translateY(0); }
+  to   { transform: translateY(calc(var(--h) * -1)); }
+}
