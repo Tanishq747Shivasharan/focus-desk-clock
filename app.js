@@ -143,6 +143,15 @@ function swStartPause() {
 function swClear() { sw.running = false; sw.elapsedMs = 0; }
 
 // ---------- Drawing the screen ----------
+let lastSec = "";   // the seconds we showed last time, e.g. "07"
+
+// One digit of the seconds. If it changed, stack old + new so CSS can slide it up.
+function digitHTML(oldCh, newCh) {
+  if (oldCh === newCh) return '<span class="digit">' + newCh + "</span>";
+  return '<span class="digit"><span class="roll"><span>' + oldCh +
+         "</span><span>" + newCh + "</span></span></span>";
+}
+
 function updatePill(now) {
   pillDate.textContent = now.toLocaleDateString("en-US", {
     weekday: "short", month: "short", day: "numeric",
@@ -150,9 +159,37 @@ function updatePill(now) {
   const parts = new Intl.DateTimeFormat("en-US", {
     hour: "numeric", minute: "2-digit", second: "2-digit", hour12: settings.hour12,
   }).formatToParts(now);
+
+  const sec = parts.find((p) => p.type === "second").value;
+  if (sec === lastSec) return;          // same second: nothing to redraw
+  const old = lastSec || sec;           // first load: no animation
+
   pillTime.innerHTML = parts
-    .map((p) => (p.type === "second" ? '<span class="sec">' + p.value + "</span>" : p.value))
+    .map((p) => p.type === "second"
+      ? '<span class="sec">' + digitHTML(old[0], sec[0]) + digitHTML(old[1], sec[1]) + "</span>"
+      : p.value)
     .join("");
+  lastSec = sec;
+}
+
+let lastDisplayText = "";   // what the big display showed last time
+let lastDisplayMode = "";   // which mode it was in
+
+function setDisplay(text) {
+  if (text === lastDisplayText && mode === lastDisplayMode) return;   // nothing changed
+
+  // only animate if we're in the same mode and the text is the same length
+  const canAnimate = mode === lastDisplayMode && text.length === lastDisplayText.length;
+
+  let html = "";
+  for (let i = 0; i < text.length; i++) {
+    const oldCh = canAnimate ? lastDisplayText[i] : text[i];
+    html += digitHTML(oldCh, text[i]);       // same helper the pill uses
+  }
+  display.innerHTML = html;
+
+  lastDisplayText = text;
+  lastDisplayMode = mode;
 }
 
 function render(now) {
@@ -164,14 +201,14 @@ function render(now) {
   if (mode === "clock") {
     let h = now.getHours();
     if (settings.hour12) h = h % 12 || 12;
-    display.textContent = pad(h) + ":" + pad(now.getMinutes());
+    setDisplay(pad(h) + ":" + pad(now.getMinutes()));
     sessionLabel.textContent = "DESK CLOCK";
     infoTotal.textContent = "--";
     infoEnd.textContent = "--";
 
   } else if (mode === "timer") {
     const remaining = timerRemaining(nowMs);
-    display.textContent = formatHMS(remaining);
+    setDisplay(formatHMS(remaining));
     if (timer.finished) {
       display.classList.add("done");
       sessionLabel.textContent = "TIME'S UP";
@@ -188,7 +225,7 @@ function render(now) {
       : (!timer.finished && timer.remainingMs < timer.totalMs) ? "Resume" : "Start";
 
   } else {
-    display.textContent = formatHMSFloor(swElapsed(nowMs));
+    setDisplay(formatHMSFloor(swElapsed(nowMs)));
     sessionLabel.textContent = "STOPWATCH";
     infoTotal.textContent = "--";
     infoEnd.textContent = "--";
